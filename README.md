@@ -2,23 +2,15 @@
 Creates Images of Selfsimilar Tilings with shifting colors that can be put together to a video.
 This is accomplished by continuously changing the color instruction for the iteration of the Tiling.
 
-To get started you need to make a java project containing all these classes. (I use eclipse).
+Since refactoring code so that it is readable is hard, I instead refactored it so that the settings can be changed from a config file.
+To play with the program follow these steps:
+-Save config.txt and the jar-file in the same folder.
+-Edit the config-file to your liking. (Keep the formating as is, ti is not fool-proof)
+-Safe your changes.
+-Start the jar-file. (If you start it from the command line, you see the color configurations it's moving through)
+-Close the window to terminate the program
 
-ShiftingColor contains the main method.
-Things that can be changed:
-line 15: The rgb values of the list of colors to cycle through
-line 20: The set of prototiles, the tiling is built from. Different sets can be found in the methods of the class Tesselate
-line 50: The iteration instruction, must mach the prototiles. They are also in the class Tesselate
-line 9: the lengths must match with the lengths in the chosen instruction.
-line 42: these are the initial&second color instructions. Number of digits must be the sum of the lengths from above, the digits must be smaller than the number of colors.
-          only one digit changes by +1 between the two
-line 44: which digit is changed 
-
-line 22: steps specifies into how many steps the path between adjacent colours is divided.
-line 24: specifies what region of the plane is depicted, to get a full image, it all has to lie within the prototile
-line 26: The name of the generated files 
-
-
+To work on the code, make a java project containing all the classes. (I use eclipse) I hope to make it more readable at some point.
 If you have questions, feel free to ask, e.g. in my discord: https://discord.gg/3XNxnGZRVs
 
 You can support me on Patreon: https://www.patreon.com/noneuclideandreamer
