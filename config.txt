@@ -1,0 +1,23 @@
+%Shifting Colors by Non-Euclidean Dreamer - config file
+
+colors = (0,255,255),(128,255,255),(128,255,128),(255,255,128)
+
+tesselation = square
+
+iteration steps = 5
+
+interpolation steps = 12
+
+generate pngs = n
+
+
+%Do not mess with the order and format
+%Change the parameters, then save the config-file (in the same folder as the jar-file) before starting the jar-file.
+
+%Choose at least 2 colors 
+%Possible Tesselations: square table chair sphinx pinwheel fish trapez dragonTrigon penrose originalPenrose reptrile
+%Iteration steps: How fine is the Tesselation? (Render Time grows exponentially)
+%Interpolation steps: How many steps between colors?
+%Generate png-files y/n
+
+%Close the window to stop the programm

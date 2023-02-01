@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Tesselation implements Comparable<Tesselation>
 {
 	static Group colorgroup;
-	static int c=12;//Tesselate.colors.length;//number of colors
+	static int c=EvolveColor.colors.length;//number of colors
 	static ArrayList<int[]>incompleteColors=new ArrayList<int[]>(),colorPermutations=colorPerm(c);
 	static int[][] ordernelements;
 	static int dim=Tile.dim;
@@ -13,14 +13,30 @@ public class Tesselation implements Comparable<Tesselation>
 	static int[][]rule;static double[][]nullangle;//rule just contains the prototileinfo of instr, nullangle is the rotangle of the subtile with instr 0
 	static int[] rot,length, mir;
 	
-	String x,y,z;//color,mirror,rot
+	int[] x,y,z;//color,mirror,rot
 		
 	
 	public Tesselation(String x0,String y0, String z0)
 	{
+		int l=x0.length();
+		x=new int[l];y=new int[l];z=new int[l];
+		
+		for(int i=0;i<l;i++)
+		{
+			x[i]=Integer.parseInt(x0.substring(i,i+1));
+			y[i]=Integer.parseInt(y0.substring(i,i+1));
+			z[i]=Integer.parseInt(z0.substring(i,i+1));
+		}
+	}
+	public Tesselation(int[] x0,int[] y0, int[] z0)
+	{
 		x=x0;y=y0;z=z0;
 	}
-	
+	public static void setC(int c0)
+	{
+		c=c0;
+		colorPermutations=colorPerm(c);
+	}
 	private static ArrayList<int[]> colorPerm(int c2)
 	{
 		System.out.println(c2);
@@ -76,15 +92,15 @@ public class Tesselation implements Comparable<Tesselation>
 	}
 	public int coloringnr(int[]per)//encodes the coloring instr for a suggested colorpermutation
 	{	int out=0;
-		for(int i=0;i<x.length();i++)
+		for(int i=0;i<x.length;i++)
 		{
 			out*=c;
-			out+=per[Integer.parseInt(x.substring(i,i+1))];
+			out+=per[x[i]];
 		}
 		return out;	
 	}
 	public Tesselation representant(boolean colormax)//if colormax==true we return null for Tesselations not using their full colorspace
-	{ 	int minimalvalue=(int)Math.pow(c,x.length()),value;int[]minper= {-1};
+	{ 	int minimalvalue=(int)Math.pow(c,x.length),value;int[]minper= {-1};
 		for(int[] per:colorPermutations)
 		{
 			value=coloringnr(per);
@@ -94,10 +110,10 @@ public class Tesselation implements Comparable<Tesselation>
 			}
 		}
 		//if(degenerate(minper))return null;
-		String newx=new String("");
-		for(int i=0;i<x.length();i++)
+		int[] newx=new int[x.length];
+		for(int i=0;i<x.length;i++)
 		{
-			newx=newx+minper[Integer.parseInt(x.substring(i, i+1))];
+			newx[i]=minper[x[i]];
 		}
 		return new Tesselation(newx,y,z);
 		//the 3 entries are: rotationnr, 1 if mirrored, for which prototile
@@ -117,11 +133,11 @@ public class Tesselation implements Comparable<Tesselation>
 		for(int[] per:incompleteColors)
 		{
 			boolean fits=true;
-			for(int i=0;i<x.length();i++)
+			for(int i=0;i<x.length;i++)
 			{
 				boolean in=false;
 				for(int j=0;j<per.length;j++)
-					if(minper[Integer.parseInt(x.substring(i,i+1))]==per[j])in=true;
+					if(minper[x[i]]==per[j])in=true;
 				if(!in)fits=false;
 			}
 			if(fits)return true;
@@ -144,17 +160,17 @@ public class Tesselation implements Comparable<Tesselation>
 	
 	public Tesselation colorflip()
 	{
-		String newz="";
-		for(int i=0;i<z.length();i++)
-			newz=newz+(c-1-z.charAt(i));
-		return new Tesselation(x,y,newz);
+		int[] newx=new int[z.length];
+		for(int i=0;i<z.length;i++)
+			newx[i]=(c-1-z[i]);
+		return new Tesselation(newx,y,z);
 	}
 	public Tesselation coloradd(int n)
 	{
-		String newz="";
-		for(int i=0;i<z.length();i++)
-			newz=newz+((z.charAt(i)+n)%c);
-		return new Tesselation(x,y,newz);
+		int[] newx=new int[x.length];
+		for(int i=0;i<x.length;i++)
+			newx[i]=(x[i]+n)%c;
+		return new Tesselation(newx,y,z);
 	}
 	
 	//Rotate one if the prototiles by -one(!) n specifies which one
@@ -189,15 +205,24 @@ public class Tesselation implements Comparable<Tesselation>
 	}
 	public int compareTo(Tesselation t)
 	{
-		if(Integer.parseInt(x)<Integer.parseInt(t.x))return -3;
-		if(Integer.parseInt(x)>Integer.parseInt(t.x))return 3;
-		if(Integer.parseInt(y)<Integer.parseInt(t.y))return-2;
-		if(Integer.parseInt(y)>Integer.parseInt(t.y))return 2;
-		if(Integer.parseInt(z)<Integer.parseInt(t.z))return -1;
-		if(Integer.parseInt(z)>Integer.parseInt(t.z))return 1;
+		int x0=toInt(x),xt=toInt(t.x);
+		if(x0<(xt))return -3;
+		if(x0>(xt))return 3;
+		int y0=toInt(y),yt=toInt(t.y);
+		if(y0<(yt))return-2;
+		if(y0>(yt))return 2;
+		int z0=toInt(z),zt=toInt(t.y);
+		if(z0<(zt))return -1;
+		if(z0>(zt))return 1;
 		return 0;
 	}
-	
+	public static int toInt(int[] array)
+	{
+		int out=0;
+		for(int i=0;i<array.length;i++)
+			out+=array[i]*(int)Math.pow(c, i);
+		return out;
+	}
 	public static int gcd(int[]n)
 	{
 		int out=n[0];
@@ -212,11 +237,11 @@ public class Tesselation implements Comparable<Tesselation>
 	}
 	public boolean isFullColor()
 	{
-		int[]numbers=new int[1+x.length()];
+		int[]numbers=new int[1+x.length];
 		numbers[0]=c;
-		for(int i=0;i<x.length();i++)
+		for(int i=0;i<x.length;i++)
 		{
-			numbers[i+1]=Integer.parseInt(x.substring(i,i+1));
+			numbers[i+1]=x[i];
 		}
 		if(gcd(numbers)==1)return true;
 		else return false;
@@ -231,10 +256,27 @@ public class Tesselation implements Comparable<Tesselation>
 		{
 			if(rep.equals(t))return false;
 		}
-		System.out.print("(\""+rep.x+"\" , \""+rep.y+"\",\""+rep.z+"\"),");
+		rep.print();
 	//	System.out.println(" is new.");
 		done.add(rep);
 		return true;
+	}
+	public void print()
+	{
+		System.out.print("{");
+		print(x);
+		System.out.print(", ");
+		print(y);
+		System.out.print(", ");
+		print(y);
+		System.out.println("}");
+	}
+	public static void print(int[] array) 
+	{
+		System.out.print("{");
+		for(int i=0;i<array.length;i++)
+			System.out.print(array[i]+",");
+		System.out.print("}");
 	}
 	
 }

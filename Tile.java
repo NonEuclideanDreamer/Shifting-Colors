@@ -60,6 +60,11 @@ public class Tile
 	{
 		return corners.length;
 	}
+	public void setColor(int n,int l)
+	{
+		color=n;
+		c2=(n+1)%l;
+	}
 	public Prototile prototype()
 	{
 		return type;
@@ -114,7 +119,7 @@ public class Tile
 		boolean[][] newcol=new boolean[width][height];
 		int c=(color%colors.length+colors.length)%colors.length;
 			
-		c= new Color(colors[c][0],colors[c][1],colors[c][2]).getRGB();System.out.println("true corner "+corners[0].c[0]+", "+corners[0].c[1]);
+		c= new Color(colors[c][0],colors[c][1],colors[c][2]).getRGB();//System.out.println("true corner "+corners[0].c[0]+", "+corners[0].c[1]);
 		int[] one=corners[0].toGrid(min,max,image.getWidth(),image.getHeight()),two,three;
 		//System.out.println("corner"+one[0]+", "+one[1]);
 		//System.out.println("color nr. "+c);
